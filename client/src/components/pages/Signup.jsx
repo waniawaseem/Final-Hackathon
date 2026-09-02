@@ -1,164 +1,16 @@
-// import { useState } from "react";
-// import { Container, Form, Button, Card } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
-// import { toast } from 'react-toastify';
-// // import { GlobalContext } from '../context/context.jsx';
-
-// const Signup = () => {
-
-//   const navigate = useNavigate();
-
-
-//   const [form, setForm] = useState({
-//     username: "",
-//     email: "",
-//     password: "",
-//     confirmPassword: "",
-//   })
-// const signupHandler =async (e)=>{
-//   e.preventDefault();
-// try {
-//     const response = await axios.post(
-//       "http://localhost:5000/api/auth/signup",
-//       form
-//     );
-//     localStorage.setItem("token",response.data.token)
-
-//     console.log(response.data);
-//    toast.success("Signup successfully!");
-
-//         navigate("/login");
-
-//   } catch (error) {
-//     toast.error("Failed to Signup!");
-//     console.log(error);
-//   }
-
-//   console.log(form)
-// }
-
-//   return (
-
-
-
-//                         // SIGNUP
-
-//     <Container className="d-flex justify-content-center align-items-center vh-100">
-//       <Card style={{ width: "25rem" }} className="p-4 shadow">
-//         <h2 className="text-center mb-4">Signup</h2>
-//         <Form onSubmit={signupHandler}>
-
-
-
-//           {/* user name */}
-//           <Form.Group className="mb-3">
-//             <Form.Label>User Name</Form.Label>
-
-//             <Form.Control
-//               type="text"
-//               placeholder="Enter your name"
-//               value={form.username}
-//               onChange={(e) =>
-//                 setForm({ ...form, username: e.target.value })
-//               }
-//             />
-//           </Form.Group>
-
-
-//           {/* Email */}
-//           <Form.Group className="mb-3" controlId="formBasicEmail">
-//   <Form.Label>Email address</Form.Label>
-
-//   <Form.Control
-//     type="email"
-//     placeholder="Enter email"
-//     value={form.email}
-//     onChange={(e) =>
-//       setForm({ ...form, email: e.target.value })
-//     }
-//   />
-
-//   <Form.Text className=" text-success" >
-//     We'll never share your email with anyone else.
-//   </Form.Text>
-// </Form.Group>
-
-//           {/* password */}
-
-// <Form.Group className="mb-3">
-//   <Form.Label>Password</Form.Label>
-
-//   <Form.Control
-//     type="password"
-//     placeholder="Enter Password"
-//     value={form.password}
-//     onChange={(e) =>
-//       setForm({ ...form, password: e.target.value })
-//     }
-//   />
-// </Form.Group>
-
-//         {/* confirm password */}
-
-// <Form.Group className="mb-3">
-//   <Form.Label>Confirm Password</Form.Label>
-
-//   <Form.Control
-//     type="password"
-//     placeholder="Confirm Password"
-//     value={form.confirmPassword}
-//     onChange={(e) =>
-//       setForm({ ...form, confirmPassword: e.target.value })
-//     }
-//   />
-// </Form.Group>
-
-//           {/* signup button */}
-
-//          <Button
-//   type="submit"
-//   variant="primary"
-//   className="w-100"
-// >
-//   Signup
-// </Button>
-//           {/* login link */}
-
-//           <p className="text-center mt-3">
-//             Already have an account?{" "}
-//             <span
-//               style={{ color: "blue", cursor: "pointer" }}
-//               onClick={() => navigate("/login")}
-//             >
-//               Login
-//             </span>
-//           </p>
-
-//         </Form>
-//       </Card>
-//     </Container>
-//   )
-// }
-
-// export default Signup
-
-
-
-
 import { useState } from "react";
 import {
-  Container,
   Form,
   Button,
   Card,
   Spinner,
   InputGroup,
+  Badge,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock, UserCheck, ShieldCheck } from "lucide-react";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -168,14 +20,63 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "customer",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [errors, setErrors] = useState({});
+
+  // Theme Styling Objects
+  const styles = {
+    pageBackground: {
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2.5rem 1rem",
+      background: "radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%)",
+      fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    },
+    glassCard: {
+      background: "rgba(255, 255, 255, 0.05)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderRadius: "1.5rem",
+      border: "1px solid rgba(255, 255, 255, 0.1)",
+      boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+      overflow: "hidden",
+      width: "100%",
+      maxWidth: "460px",
+    },
+    topAccent: {
+      height: "6px",
+      background: "linear-gradient(90deg, #3b82f6 0%, #22d3ee 100%)",
+    },
+    heading: {
+      fontWeight: "800",
+      letterSpacing: "-0.5px",
+      background: "linear-gradient(120deg, #ffffff 0%, #a5b4fc 100%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+    },
+    inputStyle: {
+      backgroundColor: "rgba(255, 255, 255, 0.07)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
+      color: "#ffffff",
+      borderRadius: "0.5rem",
+    },
+    inputAddonStyle: {
+      backgroundColor: "rgba(255, 255, 255, 0.07)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
+      color: "#94a3b8",
+    },
+    labelStyle: {
+      color: "#cbd5e1",
+      fontSize: "0.88rem",
+    },
+  };
 
   // Handle input changes
   const handleChange = (field) => (e) => {
@@ -184,7 +85,6 @@ const Signup = () => {
       [field]: e.target.value,
     }));
 
-    // Remove error when user starts typing
     setErrors((prev) => ({
       ...prev,
       [field]: "",
@@ -195,11 +95,11 @@ const Signup = () => {
   const validate = () => {
     const newErrors = {};
 
-    // Username
+    // Name
     if (!form.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = "Name is required";
     } else if (form.username.trim().length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = "Name must be at least 3 characters";
     }
 
     // Email
@@ -213,21 +113,22 @@ const Signup = () => {
     if (!form.password) {
       newErrors.password = "Password is required";
     } else if (form.password.length < 6) {
-      newErrors.password =
-        "Password must be at least 6 characters";
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     // Confirm Password
     if (!form.confirmPassword) {
-      newErrors.confirmPassword =
-        "Please confirm your password";
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (form.confirmPassword !== form.password) {
-      newErrors.confirmPassword =
-        "Passwords do not match";
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    // Role
+    if (!form.role) {
+      newErrors.role = "Please select a role";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -235,29 +136,37 @@ const Signup = () => {
   const signupHandler = async (e) => {
     e.preventDefault();
 
-    // Stop if validation fails
     if (!validate()) return;
 
     setLoading(true);
 
     try {
-      // Remove confirmPassword before sending to backend
-      const { confirmPassword, ...payload } = form;
-
       const response = await axios.post(
         "http://localhost:5000/api/auth/signup",
-        payload
+        {
+          name: form.username,
+          email: form.email,
+          password: form.password,
+          role: form.role,
+        }
       );
+
+      console.log("Signup Response:", response.data);
 
       // Save authentication data
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("username", form.username);
-      localStorage.setItem("email", form.email);
+      localStorage.setItem("username", response.data.user.name);
+      localStorage.setItem("email", response.data.user.email);
+      localStorage.setItem("role", response.data.user.role);
 
       toast.success("Account created successfully!");
 
-      // Go directly to dashboard
-      navigate("/dashboard");
+      // Route based on role
+      if (response.data.user.role === "agent") {
+        navigate("/agent/dashboard");
+      } else {
+        navigate("/customer/dashboard");
+      }
     } catch (error) {
       console.error("Signup Error:", error);
 
@@ -272,190 +181,215 @@ const Signup = () => {
   };
 
   return (
-    <Container
-      fluid
-      className="d-flex justify-content-center align-items-center min-vh-100 bg-light"
-    >
-      <Card
-        className="p-4 shadow border-0 rounded-4"
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-        }}
-      >
-        {/* Heading */}
-        <div className="text-center mb-4">
-          <h2 className="fw-bold mb-1">
-            Create Account
-          </h2>
+    <div style={styles.pageBackground}>
+      <Card style={styles.glassCard} className="border-0">
+        {/* Top Accent Gradient Bar */}
+        <div style={styles.topAccent} />
 
-          <p className="text-muted mb-0">
-            Join us in just a few seconds
-          </p>
-        </div>
-
-        <Form onSubmit={signupHandler} noValidate>
-
-          {/* Username */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">
-              Username
-            </Form.Label>
-
-            <Form.Control
-              type="text"
-              placeholder="Enter your username"
-              value={form.username}
-              onChange={handleChange("username")}
-              isInvalid={!!errors.username}
-              disabled={loading}
-            />
-
-            <Form.Control.Feedback type="invalid">
-              {errors.username}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          {/* Email */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">
-              Email address
-            </Form.Label>
-
-            <Form.Control
-              type="email"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={handleChange("email")}
-              isInvalid={!!errors.email}
-              disabled={loading}
-            />
-
-            <Form.Control.Feedback type="invalid">
-              {errors.email}
-            </Form.Control.Feedback>
-
-            {!errors.email && (
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            )}
-          </Form.Group>
-
-          {/* Password */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">
-              Password
-            </Form.Label>
-
-            <InputGroup hasValidation>
-              <Form.Control
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                value={form.password}
-                onChange={handleChange("password")}
-                isInvalid={!!errors.password}
-                disabled={loading}
-              />
-
-              <Button
-                type="button"
-                variant="outline-secondary"
-                onClick={() =>
-                  setShowPassword((prev) => !prev)
-                }
-                disabled={loading}
-              >
-                {showPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </Button>
-
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-
-          {/* Confirm Password */}
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-semibold">
-              Confirm Password
-            </Form.Label>
-
-            <InputGroup hasValidation>
-              <Form.Control
-                type={
-                  showConfirmPassword
-                    ? "text"
-                    : "password"
-                }
-                placeholder="Confirm your password"
-                value={form.confirmPassword}
-                onChange={handleChange("confirmPassword")}
-                isInvalid={!!errors.confirmPassword}
-                disabled={loading}
-              />
-
-              <Button
-                type="button"
-                variant="outline-secondary"
-                onClick={() =>
-                  setShowConfirmPassword(
-                    (prev) => !prev
-                  )
-                }
-                disabled={loading}
-              >
-                {showConfirmPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </Button>
-
-              <Form.Control.Feedback type="invalid">
-                {errors.confirmPassword}
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-
-          {/* Signup Button */}
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-100 py-2 d-flex justify-content-center align-items-center gap-2"
-            disabled={loading}
-          >
-            {loading && (
-              <Spinner
-                animation="border"
-                size="sm"
-              />
-            )}
-
-            {loading ? "Creating Account..." : "Sign Up"}
-          </Button>
-
-          {/* Login Link */}
-          <p className="text-center mt-3 mb-0">
-            Already have an account?{" "}
-
-            <span
-              className="text-primary fw-semibold"
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => navigate("/login")}
+        <Card.Body className="p-4 p-sm-5">
+          {/* Header */}
+          <div className="text-center mb-4">
+            <Badge
+              bg="info"
+              className="bg-opacity-10 text-info px-3 py-2 rounded-pill mb-3 fw-semibold"
+              style={{ border: "1px solid rgba(6, 182, 212, 0.2)" }}
             >
-              Login
-            </span>
-          </p>
-        </Form>
+              🚀 Get Started Free
+            </Badge>
+
+            <h2 className="display-6" style={styles.heading}>
+              Create Account
+            </h2>
+
+            <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>
+              Join us in just a few seconds
+            </p>
+          </div>
+
+          <Form onSubmit={signupHandler} noValidate>
+            {/* Full Name */}
+            <Form.Group className="mb-3">
+              <Form.Label style={styles.labelStyle} className="fw-semibold">
+                Full Name
+              </Form.Label>
+              <InputGroup>
+                <InputGroup.Text style={{ ...styles.inputAddonStyle, borderRight: "none" }}>
+                  <User size={18} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="John Doe"
+                  value={form.username}
+                  onChange={handleChange("username")}
+                  isInvalid={!!errors.username}
+                  disabled={loading}
+                  style={{ ...styles.inputStyle, borderLeft: "none" }}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.username}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Email Address */}
+            <Form.Group className="mb-3">
+              <Form.Label style={styles.labelStyle} className="fw-semibold">
+                Email Address
+              </Form.Label>
+              <InputGroup>
+                <InputGroup.Text style={{ ...styles.inputAddonStyle, borderRight: "none" }}>
+                  <Mail size={18} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="email"
+                  placeholder="name@example.com"
+                  value={form.email}
+                  onChange={handleChange("email")}
+                  isInvalid={!!errors.email}
+                  disabled={loading}
+                  style={{ ...styles.inputStyle, borderLeft: "none" }}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Account Type */}
+            <Form.Group className="mb-3">
+              <Form.Label style={styles.labelStyle} className="fw-semibold">
+                Account Type
+              </Form.Label>
+              <InputGroup>
+                <InputGroup.Text style={{ ...styles.inputAddonStyle, borderRight: "none" }}>
+                  <UserCheck size={18} />
+                </InputGroup.Text>
+                <Form.Select
+                  value={form.role}
+                  onChange={handleChange("role")}
+                  isInvalid={!!errors.role}
+                  disabled={loading}
+                  style={{ ...styles.inputStyle, borderLeft: "none", color: "#ffffff" }}
+                >
+                  <option value="customer" style={{ background: "#0f172a", color: "#fff" }}>
+                    Customer
+                  </option>
+                  <option value="agent" style={{ background: "#0f172a", color: "#fff" }}>
+                    Support Agent
+                  </option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.role}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Password */}
+            <Form.Group className="mb-3">
+              <Form.Label style={styles.labelStyle} className="fw-semibold">
+                Password
+              </Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Text style={{ ...styles.inputAddonStyle, borderRight: "none" }}>
+                  <Lock size={18} />
+                </InputGroup.Text>
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="At least 6 characters"
+                  value={form.password}
+                  onChange={handleChange("password")}
+                  isInvalid={!!errors.password}
+                  disabled={loading}
+                  style={{ ...styles.inputStyle, borderLeft: "none", borderRight: "none" }}
+                />
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading}
+                  style={{ ...styles.inputAddonStyle, borderLeft: "none" }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </Button>
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Confirm Password */}
+            <Form.Group className="mb-4">
+              <Form.Label style={styles.labelStyle} className="fw-semibold">
+                Confirm Password
+              </Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Text style={{ ...styles.inputAddonStyle, borderRight: "none" }}>
+                  <ShieldCheck size={18} />
+                </InputGroup.Text>
+                <Form.Control
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Re-enter your password"
+                  value={form.confirmPassword}
+                  onChange={handleChange("confirmPassword")}
+                  isInvalid={!!errors.confirmPassword}
+                  disabled={loading}
+                  style={{ ...styles.inputStyle, borderLeft: "none", borderRight: "none" }}
+                />
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  disabled={loading}
+                  style={{ ...styles.inputAddonStyle, borderLeft: "none" }}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </Button>
+                <Form.Control.Feedback type="invalid">
+                  {errors.confirmPassword}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              size="lg"
+              className="w-100 py-3 rounded-pill fw-bold shadow mt-2"
+              disabled={loading}
+              style={{
+                background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                border: "none",
+                fontSize: "1rem",
+              }}
+            >
+              {loading ? (
+                <>
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Creating Account...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
+
+            {/* Footer Navigation */}
+            <p className="text-center mt-4 mb-0" style={{ color: "#94a3b8" }}>
+              Already have an account?{" "}
+              <span
+                style={{
+                  color: "#22d3ee",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </span>
+            </p>
+          </Form>
+        </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 };
 

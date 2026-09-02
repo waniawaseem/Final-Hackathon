@@ -1,11 +1,22 @@
 import express from "express";
-import { Router } from "express";
-import { signup, login } from "../controllers/userController.js";
+
+import {
+  signup,
+  login,
+  getMe,
+} from "../controllers/authController.js";
+
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/signup",signup);
+// Signup
+router.post("/signup", signup);
 
-router.post("/login",login);
+// Login
+router.post("/login", login);
+
+// Current logged-in user
+router.get("/me", verifyToken, getMe);
 
 export default router;

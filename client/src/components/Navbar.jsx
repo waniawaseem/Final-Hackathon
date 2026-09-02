@@ -1,79 +1,113 @@
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Navbar as BootstrapNavbar, Nav, Container, Button, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const MyNavbar = () => {
+const Navbar = () => {
   const navigate = useNavigate();
 
-  const username = localStorage.getItem("username");
-  const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  const role = localStorage.getItem("role");
 
-
-  const logoutHandler = () => {
-    localStorage.removeItem("token");
-     localStorage.removeItem("username");
-    localStorage.removeItem("email");
-
+  const logout = () => {
+    localStorage.clear();
     navigate("/login");
   };
 
- return (
-  <Navbar expand="lg" bg="dark" variant="dark">
-    <Container>
+  const handleDashboard = () => {
+    if (role === "agent") {
+      navigate("/agent/dashboard");
+    } else {
+      navigate("/customer/dashboard");
+    }
+  };
 
-      <Navbar.Brand
-        style={{ cursor: "pointer" }}
-        onClick={() => navigate("/")}
-      >
-        Home
-      </Navbar.Brand>
+  return (
+    <BootstrapNavbar
+      expand="lg"
+      bg="dark"
+      variant="dark"
+      sticky="top"
+      className="shadow-sm py-2 px-3 border-bottom border-secondary border-opacity-25"
+      style={{
+        backdropFilter: "blur(10px)",
+        backgroundColor: "rgba(33, 37, 41, 0.95)",
+      }}
+    >
+      <Container>
+        {/* Brand Logo */}
+        <BootstrapNavbar.Brand
+          onClick={() => navigate("/")}
+          className="d-flex align-items-center gap-2 fs-4 fw-bold text-white user-select-none"
+          style={{ cursor: "pointer" }}
+        >
+          <span className="fs-3">🎧</span>
+          <span>
+            Support<span className="text-primary">Desk</span>
+          </span>
+        </BootstrapNavbar.Brand>
 
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        {/* Mobile Toggle Button */}
+        <BootstrapNavbar.Toggle aria-controls="navbar-nav" className="border-0 shadow-none" />
 
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto align-items-lg-center gap-2">
+        <BootstrapNavbar.Collapse id="navbar-nav">
+          <Nav className="ms-auto align-items-lg-center gap-2 pt-3 pt-lg-0">
+            {token ? (
+              <>
+                {/* User Role Badge & Name */}
+                <div className="d-flex align-items-center gap-2 bg-secondary bg-opacity-25 px-3 py-2 rounded-pill text-light my-1 my-lg-0">
+                  <span>👤</span>
+                  <span className="fw-semibold">{username || "User"}</span>
+                  {role && (
+                    <Badge bg={role === "agent" ? "info" : "primary"} className="text-capitalize ms-1">
+                      {role}
+                    </Badge>
+                  )}
+                </div>
 
-          
-          {token ? (
-            <>
-              <Navbar.Text className="text-light">
-                👤 {username}
-              </Navbar.Text>
+                {/* Dashboard Button */}
+                <Button
+                  variant="outline-light"
+                  className="rounded-pill px-3 fw-medium"
+                  onClick={handleDashboard}
+                >
+                  Dashboard
+                </Button>
 
-              <Navbar.Text className="text-light">
-                📧 {email}
-              </Navbar.Text>
+                {/* Logout Button */}
+                <Button
+                  variant="danger"
+                  className="rounded-pill px-3 fw-medium bg-gradient"
+                  onClick={logout}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                {/* Login Button */}
+                <Button
+                  variant="outline-light"
+                  className="rounded-pill px-4 fw-medium"
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </Button>
 
-              <Button
-                variant="outline-danger"
-                onClick={logoutHandler}
-              >
-                Logout
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outline-light"
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Button>
+                {/* Sign Up Button */}
+                <Button
+                  variant="primary"
+                  className="rounded-pill px-4 fw-medium shadow-sm"
+                  onClick={() => navigate("/signup")}
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
+          </Nav>
+        </BootstrapNavbar.Collapse>
+      </Container>
+    </BootstrapNavbar>
+  );
+};
 
-              <Button
-                variant="warning"
-                onClick={() => navigate("/signup")}
-              >
-                Sign Up
-              </Button>
-            </>
-          )}
-
-        </Nav>
-      </Navbar.Collapse>
-
-    </Container>
-  </Navbar>
-)};
-
-export default MyNavbar;
+export default Navbar;
